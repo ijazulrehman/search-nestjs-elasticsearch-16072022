@@ -1,0 +1,49 @@
+version: "3"
+services:
+  services-mq:
+    container_name: services-mq-x
+    image: rabbitmq:3-management
+    volumes:
+      - services-data-x:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+
+  services-es-x:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    container_name: services-es-x
+    environment:
+      - node.name=services-es-x
+      - discovery.seed_hosts=services-es-x
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - services-data-x:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  services-kibana-x:
+    image: docker.elastic.co/kibana/kibana:7.10.0
+    container_name: services-kibana-x
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://services-es-x:9200"]'
+    ports:
+      - 5601:5601
+    depends_on:
+      - services-es-x
+
+networks:
+  services:
+    driver: bridge
+
+volumes:
+  services-data-x:
