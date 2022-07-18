@@ -40,7 +40,7 @@ $ yarn
 ### Environment Variable
 
 ```bash
-$ cp .env.example
+$ cp .env.example .env
 ```
 ### Running the app
 
