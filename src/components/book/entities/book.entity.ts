@@ -1,4 +1,4 @@
-import { Base } from '@database/Entities/base.entity';
+import { Base } from '@database/entities/base.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ObjectIdColumn } from 'typeorm';
 import { BookStatus, CurrencyEum } from '../enum/book.enum';
