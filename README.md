@@ -33,6 +33,12 @@ docker-compose -p search-nestjs-elasticsearch-16072022 down
 $ yarn
 ```
 
+
+## Environment Variable
+
+```bash
+$ cp .env.example
+```
 ## Running the app
 
 ```bash
