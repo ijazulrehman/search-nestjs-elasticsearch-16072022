@@ -15,6 +15,10 @@ export class BookElasticIndex implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    await this.createBookIndex();
+  }
+
+  public async createBookIndex(): Promise<void> {
     const { statusCode } = await this.searchService.checkIndex(
       bookIndex._index,
     );
