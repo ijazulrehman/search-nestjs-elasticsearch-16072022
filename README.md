@@ -1,4 +1,7 @@
-# Local Infrastructure
+# Architecture Components
+![My animated logo](architecture.png)
+_Abstract architecture overview diagram_
+## Local Infrastructure
 
 Use **docker-compose** to run infrastructure locally.
 
@@ -14,8 +17,7 @@ Stop the running containers.
 docker-compose -p search-nestjs-elasticsearch-16072022 down
 ```
 
-# Containers
-
+## Containers  
 - Rabbitmq
   - Management UI available on http://localhost:15672
   - Log in with `admin / admin`
@@ -24,17 +26,23 @@ docker-compose -p search-nestjs-elasticsearch-16072022 down
   - Host available on `localhost:9200`
 - Kibana
   - Kibana is available on http://localhost:5601
-## Description
+### Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+### Installation
 
 ```bash
 $ yarn
 ```
 
-## Running the app
+
+### Environment Variable
+
+```bash
+$ cp .env.example .env
+```
+### Running the app
 
 ```bash
 # development
@@ -47,7 +55,7 @@ $ yarn start:dev
 $ yarn run start:prod
 ```
 
-## Test
+### Test
 
 ```bash
 # unit tests
@@ -60,7 +68,7 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
-## Documentation
+### Documentation
 
 [Swagger](http://localhost:4009/docs)
 

@@ -41,6 +41,29 @@ services:
     depends_on:
       - services-es-x
 
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_DATABASE=admin
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8080:8081
+    environment:
+      - ME_CONFIG_MONGO_DB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGO_DB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGO_DB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_URL="mongodb://admin:password@mongodb:27017"
+    depends_on:
+      - mongodb
+
 networks:
   services:
     driver: bridge
