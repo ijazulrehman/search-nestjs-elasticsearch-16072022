@@ -12,6 +12,12 @@
   },
   "moduleNameMapper": {
     "@app/config/(.*)": "<rootDir>/../libs/config/src/$1",
-    "@app/config": "<rootDir>/../libs/config/src"
+    "@app/config": "<rootDir>/../libs/config/src",
+    "@components(.*)": "<rootDir>/../src/components/$1",
+    "@services(.*)": "<rootDir>/../src/services/$1",
+    "@constant(.*)": "<rootDir>/../src/constant/$1",
+    "@database(.*)": "<rootDir>/../src/database/$1",
+    "@observers(.*)": "<rootDir>/../src/observers/$1",
+    "@repositories(.*)": "<rootDir>/../src/repositories/$1"
   }
 }

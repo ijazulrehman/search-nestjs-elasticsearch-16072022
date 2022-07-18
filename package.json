@@ -18,7 +18,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --testTimeout=10000 --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.13.0",
@@ -82,7 +82,13 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1"
+      "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
+      "^@components(|/.*)$": "<rootDir>/src/components/$1",
+      "^@services(|/.*)$": "<rootDir>/src/services/$1",
+      "^@constant(|/.*)$": "<rootDir>/src/constant/$1",
+      "^@database(|/.*)$": "<rootDir>/src/database/$1",
+      "^@observers(|/.*)$": "<rootDir>/src/observers/$1",
+      "^@repositories(|/.*)$": "<rootDir>/src/repositories/$1"
     }
   }
 }
