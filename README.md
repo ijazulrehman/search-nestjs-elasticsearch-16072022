@@ -14,8 +14,7 @@ Stop the running containers.
 docker-compose -p search-nestjs-elasticsearch-16072022 down
 ```
 
-# Containers
-
+# Containers  
 - Rabbitmq
   - Management UI available on http://localhost:15672
   - Log in with `admin / admin`

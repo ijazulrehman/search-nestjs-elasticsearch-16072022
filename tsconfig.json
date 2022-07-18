@@ -23,7 +23,30 @@
       ],
       "@app/config/*": [
         "libs/config/src/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@constant/*": [
+        "src/constant/*"
+      ],
+      "@database/*": [
+        "src/database/*"
+      ],
+      "@observers/*": [
+        "src/observers/*"
+      ],
+      "@repositories/*": [
+        "src/repositories/*"
       ]
-    }
+    },
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths"
+      }
+    ]
   }
 }
