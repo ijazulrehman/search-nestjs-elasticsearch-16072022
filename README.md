@@ -18,10 +18,8 @@ docker-compose -p search-nestjs-elasticsearch-16072022 down
 ```
 
 ## Containers  
-- Rabbitmq
-  - Management UI available on http://localhost:15672
-  - Log in with `admin / admin`
-  - Server available on `localhost:5672`
+- Mongoddb
+  - Server available on `localhost:27017`
 - Elasticsearch 
   - Host available on `localhost:9200`
 - Kibana
