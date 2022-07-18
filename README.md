@@ -1,3 +1,6 @@
+# Architecture Components
+![My animated logo](architecture.png)
+_Abstract architecture overview diagram_
 # Local Infrastructure
 
 Use **docker-compose** to run infrastructure locally.
