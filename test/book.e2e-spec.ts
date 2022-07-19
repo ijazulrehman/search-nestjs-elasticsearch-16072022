@@ -68,7 +68,7 @@ describe('BookController (e2e)', () => {
           "isbn": "1932394699",
           "pageCount": 532,
           "published": {
-            "$date": "2021-05-01T00:00:00.000-0700",
+            "date": "2021-05-01T00:00:00.000-0700",
             "price": 423,
             "currency": "USD"
           },
