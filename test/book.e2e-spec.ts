@@ -8,6 +8,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ormConfig } from '@database/config/ormconfig';
 import { QueryParamsUtil } from './utils/query-params.util';
 import { BookIndexTestMigration } from './es-index/book.test.migration';
+import { Client } from '@elastic/elasticsearch';
+import { ConfigSearch } from '@services/search/config/config.search';
+import { config } from '@app/config';
+const client = new Client(ConfigSearch.searchConfig(config.ES_HOST));
 
 describe('BookController (e2e)', () => {
   let app: INestApplication;
@@ -54,6 +58,33 @@ describe('BookController (e2e)', () => {
         });
     });
   });
+
+  describe('/books (Post)', () => {
+    it('/books (Post)', () => {
+      return request(app.getHttpServer())
+        .post('/books')
+        .send({
+          "title": "Ruby for Road",
+          "isbn": "1932394699",
+          "pageCount": 532,
+          "published": {
+            "$date": "2021-05-01T00:00:00.000-0700",
+            "price": 423,
+            "currency": "USD"
+          },
+          "thumbnailUrl": "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/black.jpg",
+          "shortDescription": "The word is out: with Ruby on Rails you can build powerful Web applications easily and quickly! And just like the Rails framework itself, Rails applications are Ruby programs. That means you can   t tap into the full power of Rails unless you master the Ruby language.",
+          "longDescription": "Ruby for Rails helps Rails developers achieve Ruby mastery. Each chapter deepens your Ruby knowledge and shows you how it connects to Rails. You   ll gain confidence working with objects and classes and learn how to leverage Ruby   s elegant, expressive syntax for Rails application power. And you'll become a better Rails developer through a deep understanding of the design of Rails itself and how to take advantage of it.    Newcomers to Ruby will find a Rails-oriented Ruby introduction that   s easy to read and that includes dynamic programming techniques, an exploration of Ruby objects, classes, and data structures, and many neat examples of Ruby and Rails code in action.    Ruby for Rails: the Ruby guide for Rails developers!",
+          "status": "PUBLISH",
+          "authors": ["David A. Black"],
+          "categories": ["Web Development"]
+        })
+        .expect(201)
+        .then((res) => {
+          console.log(res.body)
+        })
+    })
+  })
 
   afterAll(async () => {
     await BookIndexTestMigration.down();
