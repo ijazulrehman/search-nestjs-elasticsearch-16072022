@@ -1,6 +1,10 @@
 # Architecture Components
-![My animated logo](architecture.png)
+![Architecture Components](architecture.png)
 _Abstract architecture overview diagram_
+
+# Dataflow Diagram
+![Data flow diagram](dfd.png)
+_Data flow diagram_
 ## Local Infrastructure
 
 Use **docker-compose** to run infrastructure locally.
