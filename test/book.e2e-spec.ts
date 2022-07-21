@@ -1,28 +1,31 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { Repository } from 'typeorm';
-import { BookEntity } from '@components/book/entities/book.entity';
-import { BookModule } from '@components/book/book.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ormConfig } from '@database/config/ormconfig';
-import { QueryParamsUtil } from './utils/query-params.util';
-import { BookIndexTestMigration } from './es-index/book.test.migration';
-import { Client } from '@elastic/elasticsearch';
-import { ConfigSearch } from '@services/search/config/config.search';
-import { config } from '@app/config';
+import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication } from "@nestjs/common";
+import * as request from "supertest";
+import { Repository } from "typeorm";
+import { BookEntity } from "@components/book/entities/book.entity";
+import { BookModule } from "@components/book/book.module";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ormConfig } from "@database/config/ormconfig";
+import { Client } from "@elastic/elasticsearch";
+import { ConfigSearch } from "@services/search/config/config.search";
+import { config } from "@app/config";
+import { BookIndexTestMigration } from "./es-index/book.test.migration";
+import { createBookFactory } from "./factories/create-Book";
+import { QueryParamsUtil } from "./utils/query-params.util";
+
 const client = new Client(ConfigSearch.searchConfig(config.ES_HOST));
 
-describe('BookController (e2e)', () => {
+describe("BookController (e2e)", () => {
   let app: INestApplication;
   let repository: Repository<BookEntity>;
   let booKIndex: BookIndexTestMigration;
+  let book;
 
   const searchTestData = [
     [{ price: 40 }, 17],
-    [{ categories: 'Java' }, 30],
-    [{ date: '2009-04-01', price: 40 }, 2],
-    [{ date: '2011' }, 6],
+    [{ categories: "Java" }, 30],
+    [{ date: "2009-04-01", price: 40 }, 2],
+    [{ date: "2011" }, 6]
   ];
 
   beforeAll(async () => {
@@ -31,17 +34,17 @@ describe('BookController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [BookModule, TypeOrmModule.forRoot(ormConfig())],
+      imports: [BookModule, TypeOrmModule.forRoot(ormConfig())]
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
-  describe('/books/search (GET)', () => {
-    it.each(searchTestData)('%s', (params: any, resultsCount: number) => {
+  describe("/books/search (GET)", () => {
+    it.each(searchTestData)("%s", (params: any, resultsCount: number) => {
       const reqUrl = `/books/search?${QueryParamsUtil.normalizeQueryParams(
-        params,
+        params
       )}`;
       return request(app.getHttpServer())
         .get(reqUrl)
@@ -50,41 +53,57 @@ describe('BookController (e2e)', () => {
           expect(res.body).toEqual(
             expect.arrayContaining([
               expect.objectContaining({
-                _source: expect.any(Object),
-              }),
-            ]),
+                _source: expect.any(Object)
+              })
+            ])
           );
           expect(res.body.length).toEqual(resultsCount);
         });
     });
   });
 
-  describe('/books (Post)', () => {
-    it('/books (Post)', () => {
+  describe("/books (Post)", () => {
+    it("Create Book", () => {
+      let bookPayload = createBookFactory();
+
       return request(app.getHttpServer())
-        .post('/books')
-        .send({
-          "title": "Ruby for Road",
-          "isbn": "1932394699",
-          "pageCount": 532,
-          "published": {
-            "date": "2021-05-01T00:00:00.000-0700",
-            "price": 423,
-            "currency": "USD"
-          },
-          "thumbnailUrl": "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/black.jpg",
-          "shortDescription": "The word is out: with Ruby on Rails you can build powerful Web applications easily and quickly! And just like the Rails framework itself, Rails applications are Ruby programs. That means you can   t tap into the full power of Rails unless you master the Ruby language.",
-          "longDescription": "Ruby for Rails helps Rails developers achieve Ruby mastery. Each chapter deepens your Ruby knowledge and shows you how it connects to Rails. You   ll gain confidence working with objects and classes and learn how to leverage Ruby   s elegant, expressive syntax for Rails application power. And you'll become a better Rails developer through a deep understanding of the design of Rails itself and how to take advantage of it.    Newcomers to Ruby will find a Rails-oriented Ruby introduction that   s easy to read and that includes dynamic programming techniques, an exploration of Ruby objects, classes, and data structures, and many neat examples of Ruby and Rails code in action.    Ruby for Rails: the Ruby guide for Rails developers!",
-          "status": "PUBLISH",
-          "authors": ["David A. Black"],
-          "categories": ["Web Development"]
-        })
+        .post("/books")
+        .send(bookPayload)
         .expect(201)
         .then((res) => {
-          console.log(res.body)
-        })
-    })
-  })
+          book = res.body;
+          expect(book).toBeTruthy();
+          expect(book.title).toEqual(bookPayload.title);
+          expect(book.isbn).toEqual(bookPayload.isbn);
+          expect(book.pageCount).toEqual(bookPayload.pageCount);
+          expect(book.thumbnailUrl).toEqual(bookPayload.thumbnailUrl);
+          expect(book.shortDescription).toEqual(bookPayload.shortDescription);
+          expect(book.status).toEqual(bookPayload.status);
+          expect(book.authors).toEqual(bookPayload.authors);
+          expect(book.categories).toEqual(bookPayload.categories);
+        });
+    });
+  });
+  describe("/books/:id (Patch)", () => {
+    let updatedBookPayload = createBookFactory();
+    it("Update Book", () => {
+      return request(app.getHttpServer())
+        .patch(`/books/${book._id}`)
+        .send(updatedBookPayload)
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toBeTruthy();
+          expect(res.body.title).toEqual(updatedBookPayload.title);
+          expect(res.body.isbn).toEqual(updatedBookPayload.isbn);
+          expect(res.body.pageCount).toEqual(updatedBookPayload.pageCount);
+          expect(res.body.thumbnailUrl).toEqual(updatedBookPayload.thumbnailUrl);
+          expect(res.body.shortDescription).toEqual(updatedBookPayload.shortDescription);
+          expect(res.body.status).toEqual(updatedBookPayload.status);
+          expect(res.body.authors).toEqual(updatedBookPayload.authors);
+          expect(res.body.categories).toEqual(updatedBookPayload.categories);
+        });
+    });
+  });
 
   afterAll(async () => {
     await BookIndexTestMigration.down();
