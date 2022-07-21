@@ -1,10 +1,16 @@
 # Architecture Components
-![Architecture Components](architecture.png)
-_Abstract architecture overview diagram_
+<p align="center">
+  <img src="./architecture.png" label="Abstract architecture overview diagram">
+  <h4 align="center">Abstract architecture overview diagram<h4>
+</p>
 
 # Dataflow Diagram
-![Data flow diagram](dfd.png)
-_Data flow diagram_
+<p align="center">
+  <img src="./dfd.png" label="data flow diagram">
+  <h4 align="center">Data flow diagram<h4>
+</p>
+
+
 ## Local Infrastructure
 
 Use **docker-compose** to run infrastructure locally.
